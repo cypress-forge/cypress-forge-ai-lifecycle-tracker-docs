@@ -8,5 +8,6 @@ Placeholders. Record these from a copy of the workbook with **made-up sample dat
 | `pipeline.png` | Lifecycle Pipeline with 6-8 sample deals across stages. | screenshot |
 | `dashboard.png` | Pipeline Dashboard KPIs and watchlist. | screenshot |
 | `settings.png` | Settings tab, plus the Set API Key dialog with the key blurred out. | screenshot |
+| `authorize.gif` | The one-time Google authorization screens, Advanced > Go to... > Allow. | 10 s |
 
 Keep each GIF under 5 MB so GitHub shows it inline.
