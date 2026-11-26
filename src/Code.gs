@@ -21,7 +21,7 @@ var LC = {
   SETTINGS_SHEET: 'Settings',
   PARSER_SHEET: 'AI Email & Note Parser',
   PIPELINE_SHEET: 'Lifecycle Pipeline',
-  API_KEY_CELL: 'B2',
+  API_KEY_CELL: 'B2',      // Status text only; the key itself is stored privately.
   PROVIDER_CELL: 'B3',
   // Change this if you move the approved carrier list on your Settings tab.
   CARRIERS_RANGE: 'C8:C13',
@@ -64,6 +64,9 @@ function onOpen() {
     .createMenu('AI Lifecycle Tools')
     .addItem('Parse Unprocessed Emails / Updates', 'parseUnprocessedEmails')
     .addItem('Apply Selected Rows to Pipeline', 'applySelectedToPipeline')
+    .addSeparator()
+    .addItem('Set API Key', 'setApiKey')
+    .addItem('Remove API Key', 'removeApiKey')
     .addSeparator()
     .addItem('Re-parse Selected Rows', 'reparseSelectedRows')
     .addItem('Test API Connection', 'testApiConnection')
@@ -365,16 +368,15 @@ function selectedRows_(sheet) {
 
 function readLifecycleSettings_() {
   var s = getSheetOrThrow_(LC.SETTINGS_SHEET);
-  var apiKey = String(s.getRange(LC.API_KEY_CELL).getValue()).trim();
   var provider = String(s.getRange(LC.PROVIDER_CELL).getValue()).trim();
   var list = function (a1) {
     return s.getRange(a1).getValues().map(function (r) { return String(r[0]).trim(); })
       .filter(function (v) { return v !== ''; });
   };
-  if (!apiKey) throw new Error('Add your API key to Settings!' + LC.API_KEY_CELL + ' first (see Start Here).');
   if (provider !== 'OpenAI' && provider !== 'Gemini') {
     throw new Error('Set Settings!' + LC.PROVIDER_CELL + ' to "OpenAI" or "Gemini".');
   }
+  var apiKey = requireApiKey_(s, LC.API_KEY_CELL);
   return { apiKey: apiKey, provider: provider, carriers: list(LC.CARRIERS_RANGE) };
 }
 

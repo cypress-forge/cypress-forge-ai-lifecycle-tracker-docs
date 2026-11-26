@@ -146,12 +146,86 @@ function describeHttpError_(provider, code, body) {
     detail = String(body || '').slice(0, 200);
   }
   if (code === 401 || code === 403) {
-    return provider + ' rejected the API key (HTTP ' + code + '). Check Settings!B2 ' +
-      'and that the key belongs to ' + provider + '. ' + detail;
+    return provider + ' rejected the API key (HTTP ' + code + '). Use Set API Key to ' +
+      're-enter it, and check it belongs to ' + provider + '. ' + detail;
   }
   if (code === 429) {
     return provider + ' rate limit or quota reached (HTTP 429). Wait a minute, ' +
       'or check billing on your ' + provider + ' account. ' + detail;
   }
   return provider + ' error (HTTP ' + code + '): ' + detail;
+}
+
+/* ------------------------------------------------------------------------ *
+ * API key storage
+ *
+ * The key is saved in this script's User Properties: private to the Google
+ * account that saved it, never shown in a cell, and not copied when someone
+ * makes a copy of the sheet. Each person using a shared copy sets their own.
+ * ------------------------------------------------------------------------ */
+
+var API_KEY_PROPERTY = 'AI_API_KEY';
+
+/** Menu: ask for the key in a dialog and store it out of sight. */
+function setApiKey() {
+  var ui = SpreadsheetApp.getUi();
+  var hasKey = !!getStoredApiKey_();
+  var answer = ui.prompt('Set API Key',
+    (hasKey ? 'A key is already saved. Paste a new one to replace it.\n\n' : '') +
+    'Paste your OpenAI key (starts with sk-) or your Gemini key.\n' +
+    'It is saved privately to your Google account for this sheet and is never shown in a cell.',
+    ui.ButtonSet.OK_CANCEL);
+  if (answer.getSelectedButton() !== ui.Button.OK) return;
+
+  var key = String(answer.getResponseText() || '').trim();
+  if (!key) {
+    ui.alert('No key entered. Nothing was changed.');
+    return;
+  }
+  PropertiesService.getUserProperties().setProperty(API_KEY_PROPERTY, key);
+  ui.alert('API key saved (ending in ' + key.slice(-4) + '). ' +
+    'Run Test API Connection to check it works.');
+}
+
+/** Menu: delete the stored key. */
+function removeApiKey() {
+  var ui = SpreadsheetApp.getUi();
+  if (!getStoredApiKey_()) {
+    ui.alert('No API key is saved for your account in this sheet.');
+    return;
+  }
+  var confirm = ui.alert('Remove API Key',
+    'Delete the saved API key for your account? The AI menu items will stop working until you set one again.',
+    ui.ButtonSet.YES_NO);
+  if (confirm !== ui.Button.YES) return;
+  PropertiesService.getUserProperties().deleteProperty(API_KEY_PROPERTY);
+  ui.alert('API key removed.');
+}
+
+function getStoredApiKey_() {
+  return String(PropertiesService.getUserProperties().getProperty(API_KEY_PROPERTY) || '').trim();
+}
+
+/**
+ * Returns the saved key. If an older copy still has a key typed into a
+ * Settings cell, it is moved into private storage and the cell is cleared.
+ *
+ * @param {Sheet} settingsSheet The Settings tab.
+ * @param {string} legacyCell   The cell older versions read the key from.
+ */
+function requireApiKey_(settingsSheet, legacyCell) {
+  var key = getStoredApiKey_();
+  var cell = settingsSheet.getRange(legacyCell);
+  var typed = String(cell.getValue() || '').trim();
+  if (/^(sk-|AIza)/.test(typed)) {
+    if (!key) {
+      PropertiesService.getUserProperties().setProperty(API_KEY_PROPERTY, typed);
+      key = typed;
+    }
+    cell.setValue('Saved privately (use Set API Key to change)');
+  }
+  if (!key) {
+    throw new Error('No API key saved yet. Use the menu item Set API Key first (see the Start Here tab).');
+  }
+  return key;
 }

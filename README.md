@@ -14,7 +14,7 @@ This repository holds the open-source Apps Script behind the sheet, the setup gu
 | Tab | What happens there |
 | --- | --- |
 | **Start Here** | The 8-stage lifecycle, a four-step quickstart and Google's one-time authorization notes. |
-| **Settings** | API key (`B2`), provider (`OpenAI` or `Gemini` in `B3`), default target margin (`B4`, 25%), 8 editable lifecycle stages from `1 - Ticket / Intake` to `8 - Invoiced / Closed`, and 6 approved carriers. |
+| **Settings** | Provider (`OpenAI` or `Gemini` in `B3`), default target margin (`B4`, 25%), 8 editable lifecycle stages from `1 - Ticket / Intake` to `8 - Invoiced / Closed`, and 6 approved carriers. Your API key is entered through the menu and stored privately, not in a cell. |
 | **Lifecycle Pipeline** | The 16-column master tracker: Ticket #, Client / Account, Project / Item Summary, Stage, Quote #, Sales Order #, PO #, Vendor, Cost, Sell Price, Margin, Carrier, Tracking #, Est. Delivery, Client Update Note, Internal Tech Note. |
 | **AI Email & Note Parser** | Paste raw emails into column B, then **AI Lifecycle Tools > Parse Unprocessed Emails / Updates**. |
 | **Pipeline Dashboard** | Active deals, pipeline revenue, gross margin, shipments in transit or on backorder, a stage-by-stage rollup and a watchlist of open POs. |
@@ -47,6 +47,10 @@ You use your own OpenAI or Google Gemini API key. No subscription, no per-seat p
 | Google Gemini | `gemini-2.5-flash` | about $1.00 (or $0 on Gemini's free tier, within its limits) |
 
 \*Estimated from list prices when this was written, for a typical email of about 1,500 tokens. Check [OpenAI pricing](https://openai.com/api/pricing/) and [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) for current rates.
+
+## Bring your own key, kept private
+
+Your key is entered with **AI Lifecycle Tools > Set API Key** and saved to your Google account's private script storage, never in a cell. Teammates on a shared copy can't see it; each sets their own.
 
 ## How the script works
 

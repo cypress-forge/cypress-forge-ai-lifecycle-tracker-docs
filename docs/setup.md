@@ -16,7 +16,6 @@ Open the link in the PDF from your purchase. Google asks **Make a copy?**. Click
 
 | Cell | What to enter |
 | --- | --- |
-| `B2` | Your API key |
 | `B3` | `OpenAI` or `Gemini` |
 | `B4` | Your default target margin (starts at 25%) |
 | Stages | Rename any of the 8 lifecycle stages to match how your shop works |
@@ -24,13 +23,27 @@ Open the link in the PDF from your purchase. Google asks **Make a copy?**. Click
 
 ![Settings tab](../assets/settings.png)
 
-## 4. Authorize the script (one time)
+## 4. Authorize the script and save your key (one time)
 
-1. Reload the sheet and wait for the **AI Lifecycle Tools** menu.
-2. Click **AI Lifecycle Tools > Test API Connection**.
-3. Click **Continue**, pick your account.
-4. On **Google hasn't verified this app**, click **Advanced > Go to AI Lifecycle Tracker (unsafe)**. This is normal for a script inside your own sheet.
-5. Click **Allow**, then run **Test API Connection** again.
+1. Reload the sheet. After a few seconds an **AI Lifecycle Tools** menu appears to the right of **Help**.
+2. Click **AI Lifecycle Tools > Set API Key**.
+3. Google shows **Authorization required**. Click **Continue** and pick your account.
+4. You may see **Google hasn't verified this app**. That's normal for a script that lives inside your own sheet. Click **Advanced**, then **Go to AI Lifecycle Tracker (unsafe)**.
+5. Review the permissions and click **Allow**.
+6. Click **Set API Key** again, paste your key and click **OK**. It's saved privately to your account, not in a cell.
+7. Click **Test API Connection**. You should see "OpenAI is connected" (or Gemini).
+
+![Authorization screens](../assets/authorize.gif)
+
+The script can only reach this spreadsheet and your chosen AI provider. The full permission list is in [`src/appsscript.json`](../src/appsscript.json).
+
+## About your API key
+
+The key is never typed into a cell. **Set API Key** saves it in the script's private storage for your Google account (Apps Script *User Properties*). That means:
+
+- Nobody you share the sheet with can see it, and each person who uses a shared copy sets their own key.
+- It isn't copied when someone makes a copy of the sheet.
+- **Remove API Key** deletes it. You can also delete or rotate the key at any time from your OpenAI or Google account.
 
 ## 5. Daily use
 

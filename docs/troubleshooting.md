@@ -10,7 +10,9 @@ Expected for a script inside your own copy. Click **Advanced > Go to ... (unsafe
 
 ## "rejected the API key (HTTP 401)"
 
-Check `Settings!B2` for spaces or a cut-off key, and that `B3` matches the key's provider. OpenAI accounts need credit under **Billing**.
+- Use **AI Lifecycle Tools > Set API Key** and paste the key again. Copy it fresh from your provider; a missing character is the usual cause.
+- Check `Settings!B3` matches the key: an OpenAI key (`sk-...`) won't work with `Gemini`, and the other way round.
+- For OpenAI, make sure the account has credit under **Billing**.
 
 ## "Rate limit or quota reached (HTTP 429)"
 
@@ -45,9 +47,17 @@ No. Applying a row only fills Carrier, Tracking #, Est. Delivery, Client Update 
 
 No. Results are plain values written once.
 
-## Is my API key safe in the sheet?
+## Where is my API key stored? Can people I share the sheet with see it?
 
-It's stored in `Settings!B2` of your own copy. Anyone you share the sheet with can see it. If your team shares the tracker, give each person view-only access, or use a key with a monthly spend limit.
+It's stored in the script's private *User Properties* for your Google account, not in any cell. People you share the sheet with can't see it, and it isn't included when someone makes a copy. Anyone else using a shared copy needs to run **Set API Key** with their own key. To delete it, use **Remove API Key**. Setting a monthly spend limit in your OpenAI or Google account is still a good idea.
+
+## "No API key saved yet"
+
+Use **AI Lifecycle Tools > Set API Key**. If you're on a shared copy, the key saved by the sheet's owner doesn't carry over to you; set your own.
+
+## I typed my key into a Settings cell
+
+That's fine. The next time you run the menu, the script moves the key into private storage and replaces the cell with "Saved privately". If the sheet was shared while the key was visible, rotate the key in your provider's dashboard to be safe.
 
 ## Still stuck?
 
